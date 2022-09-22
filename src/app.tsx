@@ -2,9 +2,11 @@ import * as React from "react";
 import { useState, useEffect, useMemo } from "react";
 import { createRoot } from "react-dom/client";
 import MapGL, { Source, Layer } from "react-map-gl";
+import Cluster from "./Cluster/app";
 import ControlPanel from "./control-panel";
 import { heatmapLayer } from "./map-style";
 import { lineLayer } from "./path-style";
+import Pointer from "./Points/app";
 
 const MAPBOX_TOKEN =
   "pk.eyJ1IjoiYm9ja28iLCJhIjoiY2prbXFyaTdtMmVsODN2bnh1ZDJzeGoxZCJ9.X6eR9wy5MGukv2c3BwGxOQ";
@@ -61,7 +63,6 @@ export default function App() {
             }),
           },
         });
-        console.log(typeof path);
       })
       .catch((err) => console.error("Could not load data", err));
   }, []);
@@ -84,7 +85,7 @@ export default function App() {
         mapStyle="mapbox://styles/mapbox/streets-v11"
         mapboxAccessToken={MAPBOX_TOKEN}
       >
-        {data && (
+        {/* {data && (
           <Source type="geojson" data={data}>
             <Layer {...heatmapLayer} />
           </Source>
@@ -93,6 +94,8 @@ export default function App() {
         <Source id="route" type="geojson" data={path}>
           <Layer {...lineLayer} />
         </Source>
+        <Pointer/> */}
+        <Cluster />
       </MapGL>
       <ControlPanel
         startTime={timeRange[0]}
