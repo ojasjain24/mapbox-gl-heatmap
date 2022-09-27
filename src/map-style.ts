@@ -1,6 +1,6 @@
 import type {HeatmapLayer} from 'react-map-gl';
 
-const MAX_ZOOM_LEVEL = 9;
+const MAX_ZOOM_LEVEL = 20;
 
 export const heatmapLayer: HeatmapLayer = {
   id: 'heatmap',
@@ -35,6 +35,6 @@ export const heatmapLayer: HeatmapLayer = {
     // Adjust the heatmap radius by zoom level
     'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 0, 2, MAX_ZOOM_LEVEL, 20],
     // Transition from heatmap to circle layer by zoom level
-    'heatmap-opacity': ['interpolate', ['linear'], ['zoom'], 7, 1, 9, 0]
+    // 'heatmap-opacity': ['interpolate', ['linear'], ['zoom'], 7, 1, 9, 0]
   }
 };

@@ -51,22 +51,20 @@ export default function Cluster() {
               name: "urn:ogc:def:crs:OGC:1.3:CRS84",
             },
           },
-          features: [
-            json.map((val) => {
-              return {
-                type: "Feature",
-                properties: {},
-                geometry: {
-                  type: "Point",
-                  coordinates: [
-                    val["longitude"],
-                    val["latitude"],
-                    Math.random() * 70,
-                  ],
-                },
-              };
-            }),
-          ],
+          features: json.map((val) => {
+            return {
+              type: "Feature",
+              properties: {},
+              geometry: {
+                type: "Point",
+                coordinates: [
+                  val["longitude"],
+                  val["latitude"],
+                  Math.random() * 70,
+                ],
+              },
+            };
+          }),
         });
       })
       .catch((err) => console.error("Could not load data", err));

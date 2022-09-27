@@ -34,17 +34,48 @@ export default function App() {
   const [earthquakes, setEarthQuakes] = useState(null);
   const [path, setPath] = useState(null);
 
+  // useEffect(() => {
+  //   fetch("https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson")
+  //     .then((resp) => resp.json())
+  //     .then((json) => {
+  //       const features = json.features;
+  //       const endTime = features[0].properties.time;
+  //       const startTime = features[features.length - 1].properties.time;
+
+  //       setTimeRange([startTime, endTime]);
+  //       setEarthQuakes(json);
+  //       selectTime(endTime);
+  //     })
+  //     .catch((err) => console.error("Could not load data", err));
+  // }, []);
+
   useEffect(() => {
-    fetch("https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson")
+    fetch("http://127.0.0.1:5000/api/varanasi/bin")
       .then((resp) => resp.json())
       .then((json) => {
-        const features = json.features;
-        const endTime = features[0].properties.time;
-        const startTime = features[features.length - 1].properties.time;
-
-        setTimeRange([startTime, endTime]);
-        setEarthQuakes(json);
-        selectTime(endTime);
+        setEarthQuakes({
+          type: "FeatureCollection",
+          crs: {
+            type: "name",
+            properties: {
+              name: "urn:ogc:def:crs:OGC:1.3:CRS84",
+            },
+          },
+          features: json.map((val) => {
+            return {
+              type: "Feature",
+              properties: {},
+              geometry: {
+                type: "Point",
+                coordinates: [
+                  val["longitude"],
+                  val["latitude"],
+                  Math.random() * 70,
+                ],
+              },
+            };
+          }),
+        });
       })
       .catch((err) => console.error("Could not load data", err));
   }, []);
@@ -68,6 +99,7 @@ export default function App() {
   }, []);
 
   const data = useMemo(() => {
+    console.log(earthquakes);
     return allDays
       ? earthquakes
       : filterFeaturesByDay(earthquakes, selectedTime);
@@ -85,16 +117,16 @@ export default function App() {
         mapStyle="mapbox://styles/mapbox/streets-v11"
         mapboxAccessToken={MAPBOX_TOKEN}
       >
-        {/* {data && (
+        {data && (
           <Source type="geojson" data={data}>
             <Layer {...heatmapLayer} />
           </Source>
         )}
 
-        <Source id="route" type="geojson" data={path}>
+        {/* <Source id="route" type="geojson" data={path}>
           <Layer {...lineLayer} />
-        </Source>
-        <Pointer/> */}
+        </Source> */}
+        {/* <Pointer/> */}
         <Cluster />
       </MapGL>
       <ControlPanel
