@@ -6,6 +6,7 @@ import Cluster from "./Cluster/app";
 import ControlPanel from "./control-panel";
 import { heatmapLayer } from "./map-style";
 import { lineLayer } from "./path-style";
+import { hexagonalLayer } from "./hexagonal-style";
 import Pointer from "./Points/app";
 
 const MAPBOX_TOKEN =
@@ -33,6 +34,7 @@ export default function App() {
   const [selectedTime, selectTime] = useState(0);
   const [earthquakes, setEarthQuakes] = useState(null);
   const [path, setPath] = useState(null);
+  const [hex, setHex] = useState(null);
 
   // useEffect(() => {
   //   fetch("https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson")
@@ -98,8 +100,18 @@ export default function App() {
       .catch((err) => console.error("Could not load data", err));
   }, []);
 
+  useEffect(() => {
+    fetch(
+      "https://gist.githubusercontent.com/clhenrick/378cfcf38c6011f8e132419e9e4177df/raw/73d3b1411d21d9ae92dfcc5ae65b9abc7be79ae0/processed.json"
+    )
+      .then((resp) => resp.json())
+      .then((json) => {
+        setHex(json);
+      })
+      .catch((err) => console.error("Could not load data", err));
+  }, []);
+
   const data = useMemo(() => {
-    console.log(earthquakes);
     return allDays
       ? earthquakes
       : filterFeaturesByDay(earthquakes, selectedTime);
@@ -126,17 +138,36 @@ export default function App() {
         {/* <Source id="route" type="geojson" data={path}>
           <Layer {...lineLayer} />
         </Source> */}
-        {/* <Pointer/> */}
+
+        <Source id="hexGrid" type="geojson" data={hex}>
+          <Layer {...hexagonalLayer} />
+        </Source>
+
+        <Source
+          id="radar"
+          type="image"
+          url="https://docs.mapbox.com/mapbox-gl-js/assets/radar.gif"
+          coordinates={[
+            [-80.425, 46.437],
+            [-71.516, 46.437],
+            [-71.516, 37.936],
+            [-80.425, 37.936],
+          ]}
+        >
+          <Layer source="radat" id="radar-layer" type="raster" />
+        </Source>
+
+        {/* <Pointer /> */}
         <Cluster />
       </MapGL>
-      <ControlPanel
+      {/* <ControlPanel
         startTime={timeRange[0]}
         endTime={timeRange[1]}
         selectedTime={selectedTime}
         allDays={allDays}
         onChangeTime={selectTime}
         onChangeAllDays={useAllDays}
-      />
+      /> */}
     </>
   );
 }
