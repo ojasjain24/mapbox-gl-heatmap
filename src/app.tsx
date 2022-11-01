@@ -8,6 +8,7 @@ import { heatmapLayer } from "./map-style";
 import { lineLayer } from "./path-style";
 import { hexagonalLayer } from "./hexagonal-style";
 import Pointer from "./Points/app";
+import Anim from "./Animation/AnimatedPath";
 
 const MAPBOX_TOKEN =
   "pk.eyJ1IjoiYm9ja28iLCJhIjoiY2prbXFyaTdtMmVsODN2bnh1ZDJzeGoxZCJ9.X6eR9wy5MGukv2c3BwGxOQ";
@@ -119,6 +120,8 @@ export default function App() {
 
   return (
     <>
+      <Anim />
+
       <MapGL
         initialViewState={{
           longitude: 82.99697,
@@ -135,9 +138,9 @@ export default function App() {
           </Source>
         )}
 
-        {/* <Source id="route" type="geojson" data={path}>
+        <Source id="route" type="geojson" data={path}>
           <Layer {...lineLayer} />
-        </Source> */}
+        </Source>
 
         <Source id="hexGrid" type="geojson" data={hex}>
           <Layer {...hexagonalLayer} />
@@ -157,7 +160,7 @@ export default function App() {
           <Layer source="radat" id="radar-layer" type="raster" />
         </Source>
 
-        {/* <Pointer /> */}
+        <Pointer />
         <Cluster />
       </MapGL>
       {/* <ControlPanel
